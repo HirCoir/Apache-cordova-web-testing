@@ -1,0 +1,151 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Convertidor HTML a APK</title>
+    <style>
+        body {
+            background-color: #1a1a1a;
+            color: #fff;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            flex-direction: column; /* Añadido para mejorar la apariencia */
+        }
+
+        h1 {
+            text-align: center;
+        }
+
+        form {
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 8px;
+            font-size: 14px;
+        }
+
+        input {
+            width: calc(100% - 16px);
+            padding: 8px;
+            margin-bottom: 12px;
+            box-sizing: border-box;
+            border: 1px solid #555;
+            border-radius: 4px;
+            background-color: #444;
+            color: #fff;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            box-sizing: border-box;
+            border: none;
+            border-radius: 4px;
+            background-color: #28a745;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #218838;
+        }
+
+        /* Nuevos estilos para el contenedor de progreso */
+        #progress-container {
+            display: none;
+            background-color: #333;
+            padding: 20px;
+            border-radius: 8px;
+            width: 80%;
+            max-width: 400px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            margin-top: 20px;
+        }
+
+        #upload-progress {
+            font-weight: bold;
+            color: #28a745;
+        }
+
+        #process-log {
+            background-color: #222;
+            color: #fff;
+            padding: 10px;
+            overflow: auto;
+            max-height: 200px;
+        }
+    </style>
+</head>
+<body>
+    <form action="/upload" method="post" enctype="multipart/form-data">
+        <label for="zipFile">Seleccionar archivo .zip:</label>
+        <input type="file" name="zipFile" id="zipFile" accept=".zip" required>
+        <br>
+        <label for="appName">Nombre de la aplicación:</label>
+        <input type="text" name="appName" id="appName" placeholder="My App" value="Mi App" required>
+        <br>
+        <label for="packageName">Nombre del paquete:</label>
+        <input type="text" name="packageName" id="packageName" placeholder="com.myapp.best" value="com.miapp.lamejor" required>
+        <br>
+        <button type="submit">Convertir a APK</button>
+    </form>
+
+    <!-- Contenedor de progreso -->
+    <div id="progress-container">
+        <p>Progreso de subida: <span id="upload-progress">0%</span></p>
+        <p>Registro del proceso:</p>
+        <pre id="process-log"></pre>
+    </div>
+
+    <!-- Añadir esta etiqueta al head de tu HTML -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/4.0.1/socket.io.js"></script>
+
+    <!-- Añadir este script al final del body de tu HTML -->
+    <script>
+        const socket = io();
+
+        socket.on('buildProgress', (data) => {
+            // Actualizar el progreso de subida
+            const progressElement = document.getElementById('upload-progress');
+            progressElement.innerText = data;
+
+            // Actualizar el registro del proceso
+            const processLogElement = document.getElementById('process-log');
+            processLogElement.innerText += data;
+            processLogElement.scrollTop = processLogElement.scrollHeight;
+        });
+
+        socket.on('buildLog', (data) => {
+            // Actualizar el registro del proceso y hacer scroll hacia abajo
+            const processLogElement = document.getElementById('process-log');
+            processLogElement.innerText += data;
+            processLogElement.scrollTop = processLogElement.scrollHeight;
+        });
+
+        socket.on('buildComplete', (data) => {
+            // Descargar automáticamente la APK
+            window.location.href = '/download';
+        });
+
+        // Mostrar el contenedor de progreso cuando se envía el formulario
+        document.querySelector('form').addEventListener('submit', () => {
+            document.getElementById('progress-container').style.display = 'block';
+        });
+    </script>
+</body>
+</html>
