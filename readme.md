@@ -11,7 +11,7 @@ This app is dockerized. You can deploy the app using the following steps:
 2. Clone this repository on your local machine using the following command:
 
 ```bash
-git clone https://github.com/<your-username>/Apache-cordova-web-testing
+git clone https://github.com/HirCoir/Apache-cordova-web-testing
 ```
 
 3. Navigate to the cloned directory:
