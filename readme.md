@@ -1,6 +1,6 @@
-# README.md for Apache Cordova Web Testing App
-
 This is an Apache Cordova based web app testing environment. It can convert web apps made in HTML into APK files using the Cordova CLI. It allows developers to upload their web app in zip format and provides real-time build progress updates via a socket.io connection.
+
+![Preview](preview.png)
 
 ## Deployment
 
